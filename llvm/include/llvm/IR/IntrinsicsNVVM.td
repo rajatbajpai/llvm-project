@@ -1323,6 +1323,12 @@ class CP_ASYNC_BULK_TENSOR_OVERRIDE_BASE<int dim, string mode, string override> 
   string Suffix = "_" # mode # "_" # override # "_" # dim # "d";
 }
 
+// Helper that emits the intrinsic-property set for the cache_hint flag argument.
+class NVVM_CACHE_HINT_ARGPROP<int argNo> {
+  IntrinsicProperty Prop =
+      ArgInfo<ArgIndex<argNo>, [ArgName<"flag_cache_hint">]>;
+}
+
 class CP_ASYNC_BULK_TENSOR_S2G_OVERRIDE_INTR<int dim, string mode, string override>
       : CP_ASYNC_BULK_TENSOR_OVERRIDE_BASE<dim, mode, override> {
   string Name = Prefix # "s2g" # Suffix;
@@ -1339,7 +1345,7 @@ class CP_ASYNC_BULK_TENSOR_S2G_OVERRIDE_INTR<int dim, string mode, string overri
   list<IntrinsicProperty> IntrProp = [
         IntrConvergent,
         ReadOnly<ArgIndex<0>>, ReadOnly<ArgIndex<1>>, WriteOnly<ArgIndex<2>>,
-        ArgInfo<ArgIndex<FlagCacheHintIdx>, [ArgName<"flag_cache_hint">]>
+        NVVM_CACHE_HINT_ARGPROP<FlagCacheHintIdx>.Prop
   ];
 }
 
@@ -1357,8 +1363,83 @@ class CP_ASYNC_BULK_TENSOR_REDUCE_OVERRIDE_INTR<int dim, string mode, string ove
         Range<ArgIndex<RedOpIdx>, 0, 8>,
         ArgInfo<ArgIndex<RedOpIdx>, [ArgName<"red_op">,
                                      ImmArgPrinter<"printTMAReductionOp">]>,
-        ArgInfo<ArgIndex<!add(RedOpIdx, 1)>, [ArgName<"flag_cache_hint">]>
+        NVVM_CACHE_HINT_ARGPROP<!add(RedOpIdx, 1)>.Prop
   ];
+}
+
+// Helper that emits the intrinsic-property set for the evict_policy argument.
+// `upperBound` is the exclusive upper bound of the allowed policy value range.
+// Prefetch accepts both EVICT_NORMAL and EVICT_LAST (default 2).
+// Applypriority only accepts EVICT_NORMAL (upperBound = 1).
+class NVVM_EVICT_POLICY_ARGPROP<int argNo, int upperBound = 2> {
+  list<IntrinsicProperty> Prop = [
+    ImmArg<ArgIndex<argNo>>,
+    Range<ArgIndex<argNo>, 0, upperBound>,
+    ArgInfo<ArgIndex<argNo>, [ArgName<"evict_policy">,
+                              ImmArgPrinter<"printEvictPolicyType">]>
+  ];
+}
+
+class CP_ASYNC_BULK_TENSOR_PREFETCH_OVERRIDE_INTR<int dim, string mode,
+                                                  string override,
+                                                  bit IsEvict = 0>
+    : CP_ASYNC_BULK_TENSOR_OVERRIDE_BASE<dim, mode, override> {
+  string Name = Prefix # "prefetch" # !if(IsEvict, "_evict_priority", "") # Suffix;
+
+  list<LLVMType> ArgsTy = !listconcat(
+      [llvm_ptr_ty],       // tensormap_ptr
+      OverrideTypes,       // override_addr (src)
+      TensorDimsTy,        // actual tensor dims
+      Im2ColOffsetsTy,     // im2col offsets
+      !if(IsEvict, [llvm_i32_ty], [llvm_i64_ty]));
+
+  list<LLVMType> FlagsTy = !if(IsEvict, [], [llvm_i1_ty]);
+
+  defvar PolicyIdx = !sub(!size(ArgsTy), 1);
+  list<IntrinsicProperty> IntrProp = !listconcat(
+      [IntrConvergent, ReadOnly<ArgIndex<0>>, ReadOnly<ArgIndex<1>>],
+      !if(IsEvict,
+          NVVM_EVICT_POLICY_ARGPROP<PolicyIdx>.Prop,
+         [NVVM_CACHE_HINT_ARGPROP<!size(ArgsTy)>.Prop]));
+}
+
+// Applypriority TMA variants.
+class APPLYPRIORITY_BULK_TENSOR_INTR<int dim, string mode> {
+  string Name = "int_nvvm_applypriority_async_bulk_tensor_evict_priority_" #
+                mode # "_" # !if(!eq(mode, "tile_gather4"), 2, dim) # "d";
+
+  int NumIm2ColOffsets = TMA_IM2COL_OFFSETS_UTIL<dim, mode>.num;
+  list<LLVMType> ArgsTy = !listconcat(
+      [llvm_ptr_ty],                               // tensormap_ptr
+      !listsplat(llvm_i32_ty, dim),                // actual tensor dims
+      !listsplat(llvm_i16_ty, NumIm2ColOffsets),   // im2col offsets
+      [llvm_i32_ty]);                              // evict_policy
+
+  defvar PolicyIdx = !sub(!size(ArgsTy), 1);
+  list<IntrinsicProperty> IntrProp = !listconcat(
+      [IntrConvergent, ReadOnly<ArgIndex<0>>],
+      NVVM_EVICT_POLICY_ARGPROP<PolicyIdx, 1>.Prop);
+}
+
+// Applypriority TMA variants with override global address.
+class APPLYPRIORITY_BULK_TENSOR_OVERRIDE_INTR<int dim, string mode,
+                                              string override>
+    : CP_ASYNC_BULK_TENSOR_OVERRIDE_BASE<dim, mode, override> {
+  string Name = "int_nvvm_applypriority_async_bulk_tensor_evict_priority_" #
+                mode # "_" # override # "_" #
+                !if(!eq(mode, "tile_gather4"), 2, dim) # "d";
+
+  list<LLVMType> ArgsTy = !listconcat(
+      [llvm_ptr_ty],       // tensormap_ptr
+      OverrideTypes,       // override_addr (src)
+      TensorDimsTy,        // actual tensor dims
+      Im2ColOffsetsTy,     // im2col offsets
+      [llvm_i32_ty]);      // evict_policy
+
+  defvar PolicyIdx = !sub(!size(ArgsTy), 1);
+  list<IntrinsicProperty> IntrProp = !listconcat(
+      [IntrConvergent, ReadOnly<ArgIndex<0>>, ReadOnly<ArgIndex<1>>],
+      NVVM_EVICT_POLICY_ARGPROP<PolicyIdx, 1>.Prop);
 }
 
 let TargetPrefix = "nvvm" in {
@@ -3001,8 +3082,7 @@ def int_nvvm_cp_async_bulk_tensor_s2g_tile_scatter4_override_addr_2d
                   [llvm_i64_ty]),             // cache_hint
       [llvm_i1_ty],                           // Flag for cache_hint
       [IntrConvergent, ReadOnly<ArgIndex<0>>, ReadOnly<ArgIndex<1>>,
-       WriteOnly<ArgIndex<2>>, ArgInfo<ArgIndex<9>,
-      [ArgName<"flag_cache_hint">]>]>;
+       WriteOnly<ArgIndex<2>>, NVVM_CACHE_HINT_ARGPROP<9>.Prop]>;
 
 // TMA Tensor Copy Intrinsics: G2S -> From Global to Shared memory variants
 foreach dim = 1...5 in {
@@ -3044,6 +3124,34 @@ foreach dim = 1...5 in {
                       [llvm_i64_ty]),       // cache_hint
           [llvm_i1_ty],                     // Flag for cache_hint
           [IntrConvergent, ReadOnly<ArgIndex<0>>]>;
+
+    defvar evict_policy_idx = !add(!add(1, !size(tensor_dim_args)),
+                                   !size(im2col_offsets_args));
+    def int_nvvm_cp_async_bulk_tensor_prefetch_evict_priority_ # mode # _ # dim # d :
+      DefaultAttrsIntrinsic<[],
+          !listconcat([llvm_ptr_ty],        // tensormap_ptr
+                       tensor_dim_args,     // actual tensor dims
+                       im2col_offsets_args, // im2col offsets
+                      [llvm_i32_ty]),       // evict_policy
+          !listconcat([IntrConvergent, ReadOnly<ArgIndex<0>>],
+                       NVVM_EVICT_POLICY_ARGPROP<evict_policy_idx>.Prop)>;
+
+    // Prefetch + Override
+    foreach override = TMAOverrideHandler<dim, mode>.applicable_overrides in {
+      foreach prefetch_override =
+          [CP_ASYNC_BULK_TENSOR_PREFETCH_OVERRIDE_INTR<dim, mode, override>] in
+        def prefetch_override.Name
+            : DefaultAttrsIntrinsicFlags<[], prefetch_override.ArgsTy,
+                                          prefetch_override.FlagsTy,
+                                          prefetch_override.IntrProp>;
+      // Prefetch + Evict priority + Override
+      foreach prefetch_evict_override =
+          [CP_ASYNC_BULK_TENSOR_PREFETCH_OVERRIDE_INTR<dim, mode, override, /*IsEvict=*/1>] in
+        def prefetch_evict_override.Name
+            : DefaultAttrsIntrinsicFlags<[], prefetch_evict_override.ArgsTy,
+                                          prefetch_evict_override.FlagsTy,
+                                          prefetch_evict_override.IntrProp>;
+    }
 
     def int_nvvm_cp_async_bulk_tensor_g2s_cta_ # mode # _ # dim # d :
       DefaultAttrsIntrinsicFlags<[],
@@ -3097,6 +3205,36 @@ def int_nvvm_cp_async_bulk_tensor_prefetch_tile_gather4_2d
       [llvm_i1_ty],                            // Flag for cache_hint
       [IntrConvergent, ReadOnly<ArgIndex<0>>]>;
 
+// TMA prefetch for tile::gather4 with eviction priority
+def int_nvvm_cp_async_bulk_tensor_prefetch_evict_priority_tile_gather4_2d
+  : DefaultAttrsIntrinsic<[],
+      !listconcat([llvm_ptr_ty],               // tensormap_ptr
+                  !listsplat(llvm_i32_ty, 5),  // co-ordinates
+                  [llvm_i32_ty]),              // evict_policy
+      !listconcat([IntrConvergent, ReadOnly<ArgIndex<0>>],
+                   NVVM_EVICT_POLICY_ARGPROP<6>.Prop)>;
+
+// TMA prefetch for tile::gather4 with override address
+def int_nvvm_cp_async_bulk_tensor_prefetch_tile_gather4_override_addr_2d
+  : DefaultAttrsIntrinsicFlags<[],
+      !listconcat([llvm_ptr_ty,               // tensormap_ptr
+                   llvm_global_ptr_ty],       // override_addr (src)
+                  !listsplat(llvm_i32_ty, 5), // co-ordinates
+                  [llvm_i64_ty]),             // cache_hint
+      [llvm_i1_ty],                           // Flag for cache_hint
+      [IntrConvergent, ReadOnly<ArgIndex<0>>, ReadOnly<ArgIndex<1>>,
+       NVVM_CACHE_HINT_ARGPROP<8>.Prop]>;
+
+// TMA prefetch for tile::gather4 with override address and eviction priority
+def int_nvvm_cp_async_bulk_tensor_prefetch_evict_priority_tile_gather4_override_addr_2d
+  : DefaultAttrsIntrinsic<[],
+      !listconcat([llvm_ptr_ty,               // tensormap_ptr
+                   llvm_global_ptr_ty],       // override_addr (src)
+                  !listsplat(llvm_i32_ty, 5), // co-ordinates
+                  [llvm_i32_ty]),             // evict_policy
+      !listconcat([IntrConvergent, ReadOnly<ArgIndex<0>>, ReadOnly<ArgIndex<1>>],
+                   NVVM_EVICT_POLICY_ARGPROP<7>.Prop)>;
+
 // Intrinsics for Prefetch and Prefetchu
 let IntrProperties = [IntrArgMemOnly, ReadOnly<ArgIndex<0>>, NoCapture<ArgIndex<0>>] in {
   foreach level = ["L1", "L2"] in {
@@ -3122,6 +3260,59 @@ let IntrProperties = [IntrArgMemOnly, ReadOnly<ArgIndex<0>>, NoCapture<ArgIndex<
   def int_nvvm_applypriority_L2_evict_normal
     : DefaultAttrsIntrinsic<[], [llvm_ptr_ty, llvm_i64_ty]>;
 }
+
+// Aapplypriority bulk variants.
+def int_nvvm_applypriority_async_bulk_evict_priority
+  : DefaultAttrsIntrinsic<[],
+      [llvm_global_ptr_ty, // global_ptr
+       llvm_i32_ty,        // size (byte length; must be a multiple of 16)
+       llvm_i32_ty],       // evict_policy
+      !listconcat([IntrConvergent, IntrArgMemOnly,
+                   ReadOnly<ArgIndex<0>>, NoCapture<ArgIndex<0>>],
+                   NVVM_EVICT_POLICY_ARGPROP<2, 1>.Prop)>;
+
+// Applypriority TMA variants.
+foreach dim = 1...5 in {
+  foreach mode = !if(!ge(dim, 3),
+      ["tile", "im2col", "im2col_w", "im2col_w_128"], ["tile"]) in {
+    foreach ap_tensor =
+        [APPLYPRIORITY_BULK_TENSOR_INTR<dim, mode>] in
+      def ap_tensor.Name : DefaultAttrsIntrinsic<[], ap_tensor.ArgsTy,
+                                                 ap_tensor.IntrProp>;
+  }
+}
+// Applypriority TMA variants for tile::gather4.
+def int_nvvm_applypriority_async_bulk_tensor_evict_priority_tile_gather4_2d
+  : DefaultAttrsIntrinsic<[],
+      !listconcat([llvm_ptr_ty],              // tensormap_ptr
+                  !listsplat(llvm_i32_ty, 5), // co-ordinates (d0..d4)
+                  [llvm_i32_ty]),             // evict_policy
+      !listconcat([IntrConvergent, ReadOnly<ArgIndex<0>>],
+                   NVVM_EVICT_POLICY_ARGPROP<6, 1>.Prop)>;
+
+// Applypriority TMA variants with override global address.
+foreach dim = 1...5 in {
+  foreach mode = !if(!ge(dim, 3),
+      ["tile", "im2col", "im2col_w", "im2col_w_128"], ["tile"]) in {
+    foreach override = TMAOverrideHandler<dim, mode>.applicable_overrides in {
+      foreach ap_tensor_override =
+          [APPLYPRIORITY_BULK_TENSOR_OVERRIDE_INTR<dim, mode, override>] in
+        def ap_tensor_override.Name
+            : DefaultAttrsIntrinsic<[], ap_tensor_override.ArgsTy,
+                                    ap_tensor_override.IntrProp>;
+    }
+  }
+}
+// Applypriority TMA variants for tile::gather4 with override global address.
+def int_nvvm_applypriority_async_bulk_tensor_evict_priority_tile_gather4_override_addr_2d
+  : DefaultAttrsIntrinsic<[],
+      !listconcat([llvm_ptr_ty],              // tensormap_ptr
+                  [llvm_global_ptr_ty],       // override_addr (src)
+                  !listsplat(llvm_i32_ty, 5), // co-ordinates (d0..d4)
+                  [llvm_i32_ty]),             // evict_policy
+      !listconcat([IntrConvergent, ReadOnly<ArgIndex<0>>,
+                   ReadOnly<ArgIndex<1>>],
+                   NVVM_EVICT_POLICY_ARGPROP<7, 1>.Prop)>;
 
 // discard
 let IntrProperties = [NoCapture<ArgIndex<0>>, ImmArg<ArgIndex<1>>, IntrHasSideEffects] in {
@@ -3199,6 +3390,16 @@ def int_nvvm_cp_async_bulk_prefetch_L2
       [llvm_i1_ty],        // Flag for cache_hint
       [IntrConvergent, IntrArgMemOnly,
        NoCapture<ArgIndex<0>>, ReadOnly<ArgIndex<0>>]>;
+
+// Intrinsics for Bulk Copy Prefetch with Eviction Priority
+def int_nvvm_cp_async_bulk_prefetch_evict_priority
+  : DefaultAttrsIntrinsic<[],
+      [llvm_global_ptr_ty, // src_gmem_ptr
+       llvm_i32_ty,        // copy_size
+       llvm_i32_ty],       // evict_policy
+      !listconcat([IntrConvergent, IntrArgMemOnly,
+                   NoCapture<ArgIndex<0>>, ReadOnly<ArgIndex<0>>],
+                   NVVM_EVICT_POLICY_ARGPROP<2>.Prop)>;
 
 def int_nvvm_griddepcontrol_launch_dependents : Intrinsic<[], [], [IntrNoMem, IntrHasSideEffects]>;
 def int_nvvm_griddepcontrol_wait : Intrinsic<[], [], [IntrNoMem, IntrHasSideEffects]>;
