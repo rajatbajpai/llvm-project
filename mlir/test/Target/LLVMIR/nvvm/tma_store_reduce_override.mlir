@@ -29,61 +29,61 @@ llvm.func @tma_store_reduce_tile_override_addr(%src : !llvm.ptr<3>, %tma_desc : 
   // CHECK-NEXT: ret void
   // CHECK-NEXT: }
   // without cache hint
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0] {redKind = #nvvm.tma_redux_kind<add>, mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0], reduction = add : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1] {redKind = #nvvm.tma_redux_kind<add>, mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1], reduction = add : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] {redKind = #nvvm.tma_redux_kind<add>, mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2], reduction = add : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2, %d3] {redKind = #nvvm.tma_redux_kind<add>, mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2, %d3], reduction = add : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2, %d3, %d4] {redKind = #nvvm.tma_redux_kind<add>, mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2, %d3, %d4], reduction = add : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
   // with cache hint
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0] l2_cache_hint = %ch {redKind = #nvvm.tma_redux_kind<add>, mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0] l2_cache_hint = %ch, reduction = add : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1] l2_cache_hint = %ch {redKind = #nvvm.tma_redux_kind<add>, mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1] l2_cache_hint = %ch, reduction = add : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] l2_cache_hint = %ch {redKind = #nvvm.tma_redux_kind<add>, mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] l2_cache_hint = %ch, reduction = add : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2, %d3] l2_cache_hint = %ch {redKind = #nvvm.tma_redux_kind<add>, mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2, %d3] l2_cache_hint = %ch, reduction = add : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2, %d3, %d4] l2_cache_hint = %ch {redKind = #nvvm.tma_redux_kind<add>, mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2, %d3, %d4] l2_cache_hint = %ch, reduction = add : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
   // Test min reduction
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0] {redKind = #nvvm.tma_redux_kind<min>, mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0], reduction = min : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0] l2_cache_hint = %ch {redKind = #nvvm.tma_redux_kind<min>, mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0] l2_cache_hint = %ch, reduction = min : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
   // Test max reduction
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0] {redKind = #nvvm.tma_redux_kind<max>, mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0], reduction = max : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0] l2_cache_hint = %ch {redKind = #nvvm.tma_redux_kind<max>, mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0] l2_cache_hint = %ch, reduction = max : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
   // Test inc reduction
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0] {redKind = #nvvm.tma_redux_kind<inc>, mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0], reduction = inc : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0] l2_cache_hint = %ch {redKind = #nvvm.tma_redux_kind<inc>, mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0] l2_cache_hint = %ch, reduction = inc : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
   // Test dec reduction
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0] {redKind = #nvvm.tma_redux_kind<dec>, mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0], reduction = dec : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0] l2_cache_hint = %ch {redKind = #nvvm.tma_redux_kind<dec>, mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0] l2_cache_hint = %ch, reduction = dec : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
   // Test and reduction
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0] {redKind = #nvvm.tma_redux_kind<and>, mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0], reduction = and : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0] l2_cache_hint = %ch {redKind = #nvvm.tma_redux_kind<and>, mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0] l2_cache_hint = %ch, reduction = and : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
   // Test or reduction
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0] {redKind = #nvvm.tma_redux_kind<or>, mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0], reduction = or : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0] l2_cache_hint = %ch {redKind = #nvvm.tma_redux_kind<or>, mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0] l2_cache_hint = %ch, reduction = or : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
   // Test xor reduction
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0] {redKind = #nvvm.tma_redux_kind<xor>, mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0], reduction = xor : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0] l2_cache_hint = %ch {redKind = #nvvm.tma_redux_kind<xor>, mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0] l2_cache_hint = %ch, reduction = xor : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
   llvm.return
 }
@@ -113,53 +113,53 @@ llvm.func @tma_store_reduce_im2col_override_addr(%src : !llvm.ptr<3>, %tma_desc 
   // CHECK-NEXT: ret void
   // CHECK-NEXT: }
   // without cache hint
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] {redKind = #nvvm.tma_redux_kind<add>, mode = #nvvm.tma_store_mode<im2col>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2], reduction = add mode = im2col : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2, %d3] {redKind = #nvvm.tma_redux_kind<add>, mode = #nvvm.tma_store_mode<im2col>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2, %d3], reduction = add mode = im2col : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2, %d3, %d4] {redKind = #nvvm.tma_redux_kind<add>, mode = #nvvm.tma_store_mode<im2col>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2, %d3, %d4], reduction = add mode = im2col : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
   // with cache hint
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] l2_cache_hint = %ch {redKind = #nvvm.tma_redux_kind<add>, mode = #nvvm.tma_store_mode<im2col>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] l2_cache_hint = %ch, reduction = add mode = im2col : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2, %d3] l2_cache_hint = %ch {redKind = #nvvm.tma_redux_kind<add>, mode = #nvvm.tma_store_mode<im2col>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2, %d3] l2_cache_hint = %ch, reduction = add mode = im2col : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2, %d3, %d4] l2_cache_hint = %ch {redKind = #nvvm.tma_redux_kind<add>, mode = #nvvm.tma_store_mode<im2col>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2, %d3, %d4] l2_cache_hint = %ch, reduction = add mode = im2col : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
   // Test min reduction
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] {redKind = #nvvm.tma_redux_kind<min>, mode = #nvvm.tma_store_mode<im2col>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2], reduction = min mode = im2col : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] l2_cache_hint = %ch {redKind = #nvvm.tma_redux_kind<min>, mode = #nvvm.tma_store_mode<im2col>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] l2_cache_hint = %ch, reduction = min mode = im2col : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
   // Test max reduction
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] {redKind = #nvvm.tma_redux_kind<max>, mode = #nvvm.tma_store_mode<im2col>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2], reduction = max mode = im2col : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] l2_cache_hint = %ch {redKind = #nvvm.tma_redux_kind<max>, mode = #nvvm.tma_store_mode<im2col>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] l2_cache_hint = %ch, reduction = max mode = im2col : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
   // Test inc reduction
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] {redKind = #nvvm.tma_redux_kind<inc>, mode = #nvvm.tma_store_mode<im2col>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2], reduction = inc mode = im2col : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] l2_cache_hint = %ch {redKind = #nvvm.tma_redux_kind<inc>, mode = #nvvm.tma_store_mode<im2col>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] l2_cache_hint = %ch, reduction = inc mode = im2col : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
   // Test dec reduction
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] {redKind = #nvvm.tma_redux_kind<dec>, mode = #nvvm.tma_store_mode<im2col>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2], reduction = dec mode = im2col : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] l2_cache_hint = %ch {redKind = #nvvm.tma_redux_kind<dec>, mode = #nvvm.tma_store_mode<im2col>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] l2_cache_hint = %ch, reduction = dec mode = im2col : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
   // Test and reduction
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] {redKind = #nvvm.tma_redux_kind<and>, mode = #nvvm.tma_store_mode<im2col>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2], reduction = and mode = im2col : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] l2_cache_hint = %ch {redKind = #nvvm.tma_redux_kind<and>, mode = #nvvm.tma_store_mode<im2col>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] l2_cache_hint = %ch, reduction = and mode = im2col : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
   // Test or reduction
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] {redKind = #nvvm.tma_redux_kind<or>, mode = #nvvm.tma_store_mode<im2col>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2], reduction = or mode = im2col : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] l2_cache_hint = %ch {redKind = #nvvm.tma_redux_kind<or>, mode = #nvvm.tma_store_mode<im2col>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] l2_cache_hint = %ch, reduction = or mode = im2col : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
   // Test xor reduction
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] {redKind = #nvvm.tma_redux_kind<xor>, mode = #nvvm.tma_store_mode<im2col>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2], reduction = xor mode = im2col : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] l2_cache_hint = %ch {redKind = #nvvm.tma_redux_kind<xor>, mode = #nvvm.tma_store_mode<im2col>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] l2_cache_hint = %ch, reduction = xor mode = im2col : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
   llvm.return
 }
@@ -189,53 +189,53 @@ llvm.func @tma_store_reduce_im2col_w_override_addr(%src : !llvm.ptr<3>, %tma_des
   // CHECK-NEXT: ret void
   // CHECK-NEXT: }
   // without cache hint
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] {redKind = #nvvm.tma_redux_kind<add>, mode = #nvvm.tma_store_mode<im2col_w>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2], reduction = add mode = im2col_w : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2, %d3] {redKind = #nvvm.tma_redux_kind<add>, mode = #nvvm.tma_store_mode<im2col_w>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2, %d3], reduction = add mode = im2col_w : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2, %d3, %d4] {redKind = #nvvm.tma_redux_kind<add>, mode = #nvvm.tma_store_mode<im2col_w>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2, %d3, %d4], reduction = add mode = im2col_w : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
   // with cache hint
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] l2_cache_hint = %ch {redKind = #nvvm.tma_redux_kind<add>, mode = #nvvm.tma_store_mode<im2col_w>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] l2_cache_hint = %ch, reduction = add mode = im2col_w : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2, %d3] l2_cache_hint = %ch {redKind = #nvvm.tma_redux_kind<add>, mode = #nvvm.tma_store_mode<im2col_w>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2, %d3] l2_cache_hint = %ch, reduction = add mode = im2col_w : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2, %d3, %d4] l2_cache_hint = %ch {redKind = #nvvm.tma_redux_kind<add>, mode = #nvvm.tma_store_mode<im2col_w>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2, %d3, %d4] l2_cache_hint = %ch, reduction = add mode = im2col_w : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
   // Test min reduction
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] {redKind = #nvvm.tma_redux_kind<min>, mode = #nvvm.tma_store_mode<im2col_w>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2], reduction = min mode = im2col_w : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] l2_cache_hint = %ch {redKind = #nvvm.tma_redux_kind<min>, mode = #nvvm.tma_store_mode<im2col_w>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] l2_cache_hint = %ch, reduction = min mode = im2col_w : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
   // Test max reduction
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] {redKind = #nvvm.tma_redux_kind<max>, mode = #nvvm.tma_store_mode<im2col_w>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2], reduction = max mode = im2col_w : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] l2_cache_hint = %ch {redKind = #nvvm.tma_redux_kind<max>, mode = #nvvm.tma_store_mode<im2col_w>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] l2_cache_hint = %ch, reduction = max mode = im2col_w : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
   // Test inc reduction
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] {redKind = #nvvm.tma_redux_kind<inc>, mode = #nvvm.tma_store_mode<im2col_w>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2], reduction = inc mode = im2col_w : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] l2_cache_hint = %ch {redKind = #nvvm.tma_redux_kind<inc>, mode = #nvvm.tma_store_mode<im2col_w>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] l2_cache_hint = %ch, reduction = inc mode = im2col_w : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
   // Test dec reduction
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] {redKind = #nvvm.tma_redux_kind<dec>, mode = #nvvm.tma_store_mode<im2col_w>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2], reduction = dec mode = im2col_w : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] l2_cache_hint = %ch {redKind = #nvvm.tma_redux_kind<dec>, mode = #nvvm.tma_store_mode<im2col_w>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] l2_cache_hint = %ch, reduction = dec mode = im2col_w : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
   // Test and reduction
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] {redKind = #nvvm.tma_redux_kind<and>, mode = #nvvm.tma_store_mode<im2col_w>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2], reduction = and mode = im2col_w : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] l2_cache_hint = %ch {redKind = #nvvm.tma_redux_kind<and>, mode = #nvvm.tma_store_mode<im2col_w>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] l2_cache_hint = %ch, reduction = and mode = im2col_w : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
   // Test or reduction
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] {redKind = #nvvm.tma_redux_kind<or>, mode = #nvvm.tma_store_mode<im2col_w>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2], reduction = or mode = im2col_w : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] l2_cache_hint = %ch {redKind = #nvvm.tma_redux_kind<or>, mode = #nvvm.tma_store_mode<im2col_w>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] l2_cache_hint = %ch, reduction = or mode = im2col_w : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
   // Test xor reduction
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] {redKind = #nvvm.tma_redux_kind<xor>, mode = #nvvm.tma_store_mode<im2col_w>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2], reduction = xor mode = im2col_w : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] l2_cache_hint = %ch {redKind = #nvvm.tma_redux_kind<xor>, mode = #nvvm.tma_store_mode<im2col_w>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] l2_cache_hint = %ch, reduction = xor mode = im2col_w : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
   llvm.return
 }
@@ -283,90 +283,89 @@ llvm.func @tma_store_reduce_tile_override_addr_dim_stride(%src : !llvm.ptr<3>, %
   // CHECK-NEXT: ret void
   // CHECK-NEXT: }
   // without cache hint
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0] tensor_size[%ts0] {redKind = #nvvm.tma_redux_kind<add>, mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0] tensor_size[%ts0], reduction = add : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1] tensor_size[%ts0, %ts1] lower_stride[%lstrd0] upper_stride[%ustrd] {redKind = #nvvm.tma_redux_kind<add>, mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1] tensor_size[%ts0, %ts1] lower_stride[%lstrd0] upper_stride[%ustrd], reduction = add : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] tensor_size[%ts0, %ts1, %ts2] lower_stride[%lstrd0, %lstrd1] upper_stride[%ustrd] {redKind = #nvvm.tma_redux_kind<add>, mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] tensor_size[%ts0, %ts1, %ts2] lower_stride[%lstrd0, %lstrd1] upper_stride[%ustrd], reduction = add : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2, %d3] tensor_size[%ts0, %ts1, %ts2, %ts3] lower_stride[%lstrd0, %lstrd1, %lstrd2] upper_stride[%ustrd] {redKind = #nvvm.tma_redux_kind<add>, mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2, %d3] tensor_size[%ts0, %ts1, %ts2, %ts3] lower_stride[%lstrd0, %lstrd1, %lstrd2] upper_stride[%ustrd], reduction = add : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2, %d3, %d4] tensor_size[%ts0, %ts1, %ts2, %ts3, %ts4] lower_stride[%lstrd0, %lstrd1, %lstrd2, %lstrd3] upper_stride[%ustrd] {redKind = #nvvm.tma_redux_kind<add>, mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2, %d3, %d4] tensor_size[%ts0, %ts1, %ts2, %ts3, %ts4] lower_stride[%lstrd0, %lstrd1, %lstrd2, %lstrd3] upper_stride[%ustrd], reduction = add : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
   // with cache hint
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0] tensor_size[%ts0] l2_cache_hint = %ch {redKind = #nvvm.tma_redux_kind<add>, mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0] tensor_size[%ts0] l2_cache_hint = %ch, reduction = add : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1] tensor_size[%ts0, %ts1] lower_stride[%lstrd0] upper_stride[%ustrd] l2_cache_hint = %ch {redKind = #nvvm.tma_redux_kind<add>, mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1] tensor_size[%ts0, %ts1] lower_stride[%lstrd0] upper_stride[%ustrd] l2_cache_hint = %ch, reduction = add : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] tensor_size[%ts0, %ts1, %ts2] lower_stride[%lstrd0, %lstrd1] upper_stride[%ustrd] l2_cache_hint = %ch {redKind = #nvvm.tma_redux_kind<add>, mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] tensor_size[%ts0, %ts1, %ts2] lower_stride[%lstrd0, %lstrd1] upper_stride[%ustrd] l2_cache_hint = %ch, reduction = add : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2, %d3] tensor_size[%ts0, %ts1, %ts2, %ts3] lower_stride[%lstrd0, %lstrd1, %lstrd2] upper_stride[%ustrd] l2_cache_hint = %ch {redKind = #nvvm.tma_redux_kind<add>, mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2, %d3] tensor_size[%ts0, %ts1, %ts2, %ts3] lower_stride[%lstrd0, %lstrd1, %lstrd2] upper_stride[%ustrd] l2_cache_hint = %ch, reduction = add : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2, %d3, %d4] tensor_size[%ts0, %ts1, %ts2, %ts3, %ts4] lower_stride[%lstrd0, %lstrd1, %lstrd2, %lstrd3] upper_stride[%ustrd] l2_cache_hint = %ch {redKind = #nvvm.tma_redux_kind<add>, mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2, %d3, %d4] tensor_size[%ts0, %ts1, %ts2, %ts3, %ts4] lower_stride[%lstrd0, %lstrd1, %lstrd2, %lstrd3] upper_stride[%ustrd] l2_cache_hint = %ch, reduction = add : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
   // Test min reduction
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0] tensor_size[%ts0] {redKind = #nvvm.tma_redux_kind<min>, mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0] tensor_size[%ts0], reduction = min : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0] tensor_size[%ts0] l2_cache_hint = %ch {redKind = #nvvm.tma_redux_kind<min>, mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0] tensor_size[%ts0] l2_cache_hint = %ch, reduction = min : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1] tensor_size[%ts0, %ts1] lower_stride[%lstrd0] upper_stride[%ustrd] {redKind = #nvvm.tma_redux_kind<min>, mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1] tensor_size[%ts0, %ts1] lower_stride[%lstrd0] upper_stride[%ustrd], reduction = min : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1] tensor_size[%ts0, %ts1] lower_stride[%lstrd0] upper_stride[%ustrd] l2_cache_hint = %ch {redKind = #nvvm.tma_redux_kind<min>, mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1] tensor_size[%ts0, %ts1] lower_stride[%lstrd0] upper_stride[%ustrd] l2_cache_hint = %ch, reduction = min : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
   // Test max reduction
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0] tensor_size[%ts0] {redKind = #nvvm.tma_redux_kind<max>, mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0] tensor_size[%ts0], reduction = max : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0] tensor_size[%ts0] l2_cache_hint = %ch {redKind = #nvvm.tma_redux_kind<max>, mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0] tensor_size[%ts0] l2_cache_hint = %ch, reduction = max : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1] tensor_size[%ts0, %ts1] lower_stride[%lstrd0] upper_stride[%ustrd] {redKind = #nvvm.tma_redux_kind<max>, mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1] tensor_size[%ts0, %ts1] lower_stride[%lstrd0] upper_stride[%ustrd], reduction = max : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1] tensor_size[%ts0, %ts1] lower_stride[%lstrd0] upper_stride[%ustrd] l2_cache_hint = %ch {redKind = #nvvm.tma_redux_kind<max>, mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1] tensor_size[%ts0, %ts1] lower_stride[%lstrd0] upper_stride[%ustrd] l2_cache_hint = %ch, reduction = max : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
   // Test inc reduction
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0] tensor_size[%ts0] {redKind = #nvvm.tma_redux_kind<inc>, mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0] tensor_size[%ts0], reduction = inc : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0] tensor_size[%ts0] l2_cache_hint = %ch {redKind = #nvvm.tma_redux_kind<inc>, mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0] tensor_size[%ts0] l2_cache_hint = %ch, reduction = inc : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1] tensor_size[%ts0, %ts1] lower_stride[%lstrd0] upper_stride[%ustrd] {redKind = #nvvm.tma_redux_kind<inc>, mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1] tensor_size[%ts0, %ts1] lower_stride[%lstrd0] upper_stride[%ustrd], reduction = inc : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1] tensor_size[%ts0, %ts1] lower_stride[%lstrd0] upper_stride[%ustrd] l2_cache_hint = %ch {redKind = #nvvm.tma_redux_kind<inc>, mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1] tensor_size[%ts0, %ts1] lower_stride[%lstrd0] upper_stride[%ustrd] l2_cache_hint = %ch, reduction = inc : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
   // Test dec reduction
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0] tensor_size[%ts0] {redKind = #nvvm.tma_redux_kind<dec>, mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0] tensor_size[%ts0], reduction = dec : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0] tensor_size[%ts0] l2_cache_hint = %ch {redKind = #nvvm.tma_redux_kind<dec>, mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0] tensor_size[%ts0] l2_cache_hint = %ch, reduction = dec : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1] tensor_size[%ts0, %ts1] lower_stride[%lstrd0] upper_stride[%ustrd] {redKind = #nvvm.tma_redux_kind<dec>, mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1] tensor_size[%ts0, %ts1] lower_stride[%lstrd0] upper_stride[%ustrd], reduction = dec : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1] tensor_size[%ts0, %ts1] lower_stride[%lstrd0] upper_stride[%ustrd] l2_cache_hint = %ch {redKind = #nvvm.tma_redux_kind<dec>, mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1] tensor_size[%ts0, %ts1] lower_stride[%lstrd0] upper_stride[%ustrd] l2_cache_hint = %ch, reduction = dec : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
   // Test and reduction
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0] tensor_size[%ts0] {redKind = #nvvm.tma_redux_kind<and>, mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0] tensor_size[%ts0], reduction = and : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0] tensor_size[%ts0] l2_cache_hint = %ch {redKind = #nvvm.tma_redux_kind<and>, mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0] tensor_size[%ts0] l2_cache_hint = %ch, reduction = and : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1] tensor_size[%ts0, %ts1] lower_stride[%lstrd0] upper_stride[%ustrd] {redKind = #nvvm.tma_redux_kind<and>, mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1] tensor_size[%ts0, %ts1] lower_stride[%lstrd0] upper_stride[%ustrd], reduction = and : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1] tensor_size[%ts0, %ts1] lower_stride[%lstrd0] upper_stride[%ustrd] l2_cache_hint = %ch {redKind = #nvvm.tma_redux_kind<and>, mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1] tensor_size[%ts0, %ts1] lower_stride[%lstrd0] upper_stride[%ustrd] l2_cache_hint = %ch, reduction = and : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
   // Test or reduction
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0] tensor_size[%ts0] {redKind = #nvvm.tma_redux_kind<or>, mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0] tensor_size[%ts0], reduction = or : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0] tensor_size[%ts0] l2_cache_hint = %ch {redKind = #nvvm.tma_redux_kind<or>, mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0] tensor_size[%ts0] l2_cache_hint = %ch, reduction = or : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1] tensor_size[%ts0, %ts1] lower_stride[%lstrd0] upper_stride[%ustrd] {redKind = #nvvm.tma_redux_kind<or>, mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1] tensor_size[%ts0, %ts1] lower_stride[%lstrd0] upper_stride[%ustrd], reduction = or : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1] tensor_size[%ts0, %ts1] lower_stride[%lstrd0] upper_stride[%ustrd] l2_cache_hint = %ch {redKind = #nvvm.tma_redux_kind<or>, mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1] tensor_size[%ts0, %ts1] lower_stride[%lstrd0] upper_stride[%ustrd] l2_cache_hint = %ch, reduction = or : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
   // Test xor reduction
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0] tensor_size[%ts0] {redKind = #nvvm.tma_redux_kind<xor>, mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0] tensor_size[%ts0], reduction = xor : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0] tensor_size[%ts0] l2_cache_hint = %ch {redKind = #nvvm.tma_redux_kind<xor>, mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0] tensor_size[%ts0] l2_cache_hint = %ch, reduction = xor : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1] tensor_size[%ts0, %ts1] lower_stride[%lstrd0] upper_stride[%ustrd] {redKind = #nvvm.tma_redux_kind<xor>, mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1] tensor_size[%ts0, %ts1] lower_stride[%lstrd0] upper_stride[%ustrd], reduction = xor : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1] tensor_size[%ts0, %ts1] lower_stride[%lstrd0] upper_stride[%ustrd] l2_cache_hint = %ch {redKind = #nvvm.tma_redux_kind<xor>, mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1] tensor_size[%ts0, %ts1] lower_stride[%lstrd0] upper_stride[%ustrd] l2_cache_hint = %ch, reduction = xor : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
  llvm.return
 }
-

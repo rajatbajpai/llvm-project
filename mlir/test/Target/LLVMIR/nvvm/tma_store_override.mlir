@@ -16,26 +16,26 @@ llvm.func @tma_shared_cta_global_tile_override_addr(%src : !llvm.ptr<3>, %tma_de
 // CHECK-NEXT: }
 
   // without cache hint
-  nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0] {mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0] : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0, %d1] {mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0, %d1] : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] {mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2, %d3] {mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2, %d3] : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2, %d3, %d4] {mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2, %d3, %d4] : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
   // with cache hint
-  nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0] l2_cache_hint = %ch {mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0] l2_cache_hint = %ch : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0, %d1] l2_cache_hint = %ch {mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0, %d1] l2_cache_hint = %ch : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] l2_cache_hint = %ch {mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] l2_cache_hint = %ch : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2, %d3] l2_cache_hint = %ch {mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2, %d3] l2_cache_hint = %ch : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2, %d3, %d4] l2_cache_hint = %ch {mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2, %d3, %d4] l2_cache_hint = %ch : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
   llvm.return
 }
@@ -48,10 +48,10 @@ llvm.func @tma_shared_cta_global_tile_scatter4_override_addr(%src : !llvm.ptr<3>
 // CHECK-NEXT: }
 
   // without cache hint
-  nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2, %d3, %d4] {mode = #nvvm.tma_store_mode<tile_scatter4>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2, %d3, %d4] mode = tile_scatter4 : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
   // with cache hint
-  nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2, %d3, %d4] l2_cache_hint = %ch {mode = #nvvm.tma_store_mode<tile_scatter4>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2, %d3, %d4] l2_cache_hint = %ch mode = tile_scatter4 : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
   llvm.return
 }
@@ -68,18 +68,18 @@ llvm.func @tma_shared_cta_global_im2col(%src : !llvm.ptr<3>, %tma_desc : !llvm.p
 // CHECK-NEXT: }
 
   // without cache hint
-  nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] {mode = #nvvm.tma_store_mode<im2col>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] mode = im2col : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2, %d3] {mode = #nvvm.tma_store_mode<im2col>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2, %d3] mode = im2col : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2, %d3, %d4] {mode = #nvvm.tma_store_mode<im2col>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2, %d3, %d4] mode = im2col : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
   // with cache hint
-  nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] l2_cache_hint = %ch {mode = #nvvm.tma_store_mode<im2col>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] l2_cache_hint = %ch mode = im2col : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2, %d3] l2_cache_hint = %ch {mode = #nvvm.tma_store_mode<im2col>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2, %d3] l2_cache_hint = %ch mode = im2col : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2, %d3, %d4] l2_cache_hint = %ch {mode = #nvvm.tma_store_mode<im2col>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2, %d3, %d4] l2_cache_hint = %ch mode = im2col : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
   llvm.return
 }
@@ -96,18 +96,18 @@ llvm.func @tma_shared_cta_global_im2col_w(%src : !llvm.ptr<3>, %tma_desc : !llvm
 // CHECK-NEXT: }
 
   // without cache hint
-  nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] {mode = #nvvm.tma_store_mode<im2col_w>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] mode = im2col_w : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2, %d3] {mode = #nvvm.tma_store_mode<im2col_w>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2, %d3] mode = im2col_w : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2, %d3, %d4] {mode = #nvvm.tma_store_mode<im2col_w>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2, %d3, %d4] mode = im2col_w : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
   // with cache hint
-  nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] l2_cache_hint = %ch {mode = #nvvm.tma_store_mode<im2col_w>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] l2_cache_hint = %ch mode = im2col_w : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2, %d3] l2_cache_hint = %ch {mode = #nvvm.tma_store_mode<im2col_w>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2, %d3] l2_cache_hint = %ch mode = im2col_w : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2, %d3, %d4] l2_cache_hint = %ch {mode = #nvvm.tma_store_mode<im2col_w>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2, %d3, %d4] l2_cache_hint = %ch mode = im2col_w : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
   llvm.return
 }
@@ -128,27 +128,26 @@ llvm.func @tma_shared_cta_global_tile_override_addr_dim_stride(%src : !llvm.ptr<
 // CHECK-NEXT: }
 
   // without cache hint
-  nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0] tensor_size[%ts0] {mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0] tensor_size[%ts0] : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0, %d1] tensor_size[%ts0, %ts1] lower_stride[%lstrd0] upper_stride[%ustrd] {mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0, %d1] tensor_size[%ts0, %ts1] lower_stride[%lstrd0] upper_stride[%ustrd] : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] tensor_size[%ts0, %ts1, %ts2] lower_stride[%lstrd0, %lstrd1] upper_stride[%ustrd] {mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] tensor_size[%ts0, %ts1, %ts2] lower_stride[%lstrd0, %lstrd1] upper_stride[%ustrd] : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2, %d3] tensor_size[%ts0, %ts1, %ts2, %ts3] lower_stride[%lstrd0, %lstrd1, %lstrd2] upper_stride[%ustrd] {mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2, %d3] tensor_size[%ts0, %ts1, %ts2, %ts3] lower_stride[%lstrd0, %lstrd1, %lstrd2] upper_stride[%ustrd] : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2, %d3, %d4] tensor_size[%ts0, %ts1, %ts2, %ts3, %ts4] lower_stride[%lstrd0, %lstrd1, %lstrd2, %lstrd3] upper_stride[%ustrd] {mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2, %d3, %d4] tensor_size[%ts0, %ts1, %ts2, %ts3, %ts4] lower_stride[%lstrd0, %lstrd1, %lstrd2, %lstrd3] upper_stride[%ustrd] : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
   // with cache hint
-  nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0] tensor_size[%ts0] l2_cache_hint = %ch {mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0] tensor_size[%ts0] l2_cache_hint = %ch : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0, %d1] tensor_size[%ts0, %ts1] lower_stride[%lstrd0] upper_stride[%ustrd] l2_cache_hint = %ch {mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0, %d1] tensor_size[%ts0, %ts1] lower_stride[%lstrd0] upper_stride[%ustrd] l2_cache_hint = %ch : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] tensor_size[%ts0, %ts1, %ts2] lower_stride[%lstrd0, %lstrd1] upper_stride[%ustrd] l2_cache_hint = %ch {mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2] tensor_size[%ts0, %ts1, %ts2] lower_stride[%lstrd0, %lstrd1] upper_stride[%ustrd] l2_cache_hint = %ch : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2, %d3] tensor_size[%ts0, %ts1, %ts2, %ts3] lower_stride[%lstrd0, %lstrd1, %lstrd2] upper_stride[%ustrd] l2_cache_hint = %ch {mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2, %d3] tensor_size[%ts0, %ts1, %ts2, %ts3] lower_stride[%lstrd0, %lstrd1, %lstrd2] upper_stride[%ustrd] l2_cache_hint = %ch : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
-  nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2, %d3, %d4] tensor_size[%ts0, %ts1, %ts2, %ts3, %ts4] lower_stride[%lstrd0, %lstrd1, %lstrd2, %lstrd3] upper_stride[%ustrd] l2_cache_hint = %ch {mode = #nvvm.tma_store_mode<tile>} : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+  nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2, %d3, %d4] tensor_size[%ts0, %ts1, %ts2, %ts3, %ts4] lower_stride[%lstrd0, %lstrd1, %lstrd2, %lstrd3] upper_stride[%ustrd] l2_cache_hint = %ch : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
 
  llvm.return
 }
-

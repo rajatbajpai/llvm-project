@@ -4631,40 +4631,31 @@ def NVVM_CpAsyncBulkTensorSharedCTAToGlobalOverrideAddrOp :
 
       // override.addr (TILE, 1D)
       ```mlir
-      nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0] {
-        mode = #nvvm.tma_store_mode<tile>
-      } : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+      nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0] : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
       ```
 
       // override.addr (IM2COL, 3D) with L2 cache hint
       ```mlir
       nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2]
-        l2_cache_hint = %ch {
-        mode = #nvvm.tma_store_mode<im2col>
-      } : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+        l2_cache_hint = %ch mode = im2col : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
       ```
 
       // override.addr (TILE_SCATTER4, 2D) — 5 coordinates: x0, y0, y1, y2, y3
       ```mlir
-      nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%x0, %y0, %y1, %y2, %y3] {
-        mode = #nvvm.tma_store_mode<tile_scatter4>
-      } : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+      nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr, box[%x0, %y0, %y1, %y2, %y3]
+        mode = tile_scatter4 : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
       ```
 
       // override.addr.dim (TILE, 1D)
       ```mlir
       nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr,
-        box[%d0] tensor_size[%ts0] {
-        mode = #nvvm.tma_store_mode<tile>
-      } : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+        box[%d0] tensor_size[%ts0] : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
       ```
 
       // override.addr.dim.stride (TILE, 2D)
       ```mlir
       nvvm.cp.async.bulk.tensor.global.shared.cta.override %tma_desc, %src, %override_addr,
-        box[%d0, %d1] tensor_size[%ts0, %ts1] lower_stride[%lstrd0] upper_stride[%ustrd] {
-        mode = #nvvm.tma_store_mode<tile>
-      } : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+        box[%d0, %d1] tensor_size[%ts0, %ts1] lower_stride[%lstrd0] upper_stride[%ustrd] : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
       ```
 
       [For more information, see PTX ISA](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#data-movement-and-conversion-instructions-cp-async-bulk-tensor)
@@ -4675,11 +4666,14 @@ def NVVM_CpAsyncBulkTensorSharedCTAToGlobalOverrideAddrOp :
       $srcMem `,`
       $overrideAddr `,`
       `box` `[`$coordinates `]`
-      (`tensor_size` `[`$tensorSize^ `]`)?
-      (`lower_stride` `[`$lowerStride^ `]`)?
-      (`upper_stride` `[`$upperStride^ `]`)?
-      (`l2_cache_hint` `=` $l2CacheHint^)?
-      attr-dict  `:` type($tmaDescriptor) `,` type($srcMem) `,` type($overrideAddr)
+      oilist(
+        `tensor_size` `[` $tensorSize `]`
+        | `lower_stride` `[` $lowerStride `]`
+        | `upper_stride` `[` $upperStride `]`
+        | `l2_cache_hint` `=` $l2CacheHint
+        | `mode` `=` $mode
+      )
+      attr-dict `:` type($tmaDescriptor) `,` type($srcMem) `,` type($overrideAddr)
     }];
 
     let hasVerifier = 1;
@@ -4937,37 +4931,25 @@ def NVVM_CpAsyncBulkTensorReduceOverrideAddrOp :
 
       // override.addr (TILE, 1D) with ADD reduction
       ```mlir
-      nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0] {
-        redKind = #nvvm.tma_redux_kind<add>,
-        mode = #nvvm.tma_store_mode<tile>
-      } : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+      nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0], reduction = add : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
       ```
 
       // override.addr (IM2COL, 3D) with L2 cache hint and MIN reduction
       ```mlir
       nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr, box[%d0, %d1, %d2]
-        l2_cache_hint = %ch {
-        redKind = #nvvm.tma_redux_kind<min>,
-        mode = #nvvm.tma_store_mode<im2col>
-      } : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+        l2_cache_hint = %ch, reduction = min mode = im2col : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
       ```
 
       // override.addr.dim (TILE, 1D)
       ```mlir
       nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr,
-        box[%d0] tensor_size[%ts0] {
-        redKind = #nvvm.tma_redux_kind<add>,
-        mode = #nvvm.tma_store_mode<tile>
-      } : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+        box[%d0] tensor_size[%ts0], reduction = add : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
       ```
 
       // override.addr.dim.stride (TILE, 2D)
       ```mlir
       nvvm.cp.async.bulk.tensor.reduce.override %tma_desc, %src, %override_addr,
-        box[%d0, %d1] tensor_size[%ts0, %ts1] lower_stride[%lstrd0] upper_stride[%ustrd] {
-        redKind = #nvvm.tma_redux_kind<and>,
-        mode = #nvvm.tma_store_mode<tile>
-      } : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
+        box[%d0, %d1] tensor_size[%ts0, %ts1] lower_stride[%lstrd0] upper_stride[%ustrd], reduction = and : !llvm.ptr, !llvm.ptr<3>, !llvm.ptr<1>
       ```
 
       [For more information, see PTX ISA](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#data-movement-and-conversion-instructions-cp-reduce-async-bulk-tensor)
@@ -4982,6 +4964,7 @@ def NVVM_CpAsyncBulkTensorReduceOverrideAddrOp :
       (`lower_stride` `[`$lowerStride^ `]`)?
       (`upper_stride` `[`$upperStride^ `]`)?
       (`l2_cache_hint` `=` $l2CacheHint^)?
+      `,` `reduction` `=` $redKind oilist(`mode` `=` $mode)
       attr-dict  `:` type($tmaDescriptor) `,` type($srcMem) `,` type($overrideAddr)
     }];
 
