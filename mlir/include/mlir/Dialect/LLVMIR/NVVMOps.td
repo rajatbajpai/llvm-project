@@ -4519,7 +4519,7 @@ def NVVM_CpAsyncBulkTensorGlobalToSharedClusterOp :
 }
 
 //===----------------------------------------------------------------------===//
-// NVVM S2G Ops
+// NVVM TMA Shared to Global Ops
 //===----------------------------------------------------------------------===//
 
 def NVVM_CpAsyncBulkTensorSharedCTAToGlobalOp : 
@@ -4588,9 +4588,9 @@ def NVVM_CpAsyncBulkTensorSharedCTAToGlobalOverrideAddrOp :
   NVVM_VoidIntrinsicOp<"cp.async.bulk.tensor.global.shared.cta.override",
                        [AttrSizedOperandSegments]> {
     let arguments = (ins
-      LLVM_AnyPointer:$tmaDesc,
+      LLVM_PointerGeneric:$tmaDescriptor,
       LLVM_PointerShared:$srcMem,
-      LLVM_PointerGlobal:$overrideAdrr,
+      LLVM_PointerGlobal:$overrideAddr,
       Variadic<I32>:$coordinates,
       Variadic<I16>:$tensorSize,
       Variadic<I32>:$lowerStride,
@@ -4609,17 +4609,17 @@ def NVVM_CpAsyncBulkTensorSharedCTAToGlobalOverrideAddrOp :
       The `mode` attribute selects the store mode. The override variant is selected by
       which optional operands are provided:
 
-      - `override.addr` (`.override::global_address`): only `overrideAdrr` is given; the
+      - `override.addr` (`.override::global_address`): only `overrideAddr` is given; the
         global base address from the tensor-map is replaced. Supported in `TILE` (1D–5D),
         `IM2COL`/`IM2COL_W` (3D–5D), and `TILE_SCATTER4` (2D, requires 5 coordinates).
-      - `override.addr.dim` (1D, `TILE` only): `overrideAdrr` plus `tensorSize` (one
+      - `override.addr.dim` (1D, `TILE` only): `overrideAddr` plus `tensorSize` (one
         element); also overrides the tensor global dimension.
-      - `override.addr.dim.stride` (2D–5D, `TILE` only): `overrideAdrr` plus `tensorSize`,
+      - `override.addr.dim.stride` (2D–5D, `TILE` only): `overrideAddr` plus `tensorSize`,
         `lowerStride`, and `upperStride`; also overrides the global dimensions and strides.
         The effective global stride is
         `global_stride[i] = ((%stride{i} + (%upper_stride{i} << 32)) << 4)`.
 
-      `overrideAdrr` must be 16B aligned (a runtime error is raised otherwise) and the
+      `overrideAddr` must be 16B aligned (a runtime error is raised otherwise) and the
       memory range `[%override_addr, %override_addr + 128 KiB)` must be allocated and
       accessible during execution. When overriding dimensions/strides, the base-address
       override is mandatory and the tensor start coordinates must be zero; otherwise the
@@ -4671,15 +4671,15 @@ def NVVM_CpAsyncBulkTensorSharedCTAToGlobalOverrideAddrOp :
     }];
 
     let assemblyFormat = [{
-      $tmaDesc `,`
+      $tmaDescriptor `,`
       $srcMem `,`
-      $overrideAdrr `,`
+      $overrideAddr `,`
       `box` `[`$coordinates `]`
       (`tensor_size` `[`$tensorSize^ `]`)?
       (`lower_stride` `[`$lowerStride^ `]`)?
       (`upper_stride` `[`$upperStride^ `]`)?
       (`l2_cache_hint` `=` $l2CacheHint^)?
-      attr-dict  `:` type($tmaDesc) `,` type($srcMem) `,` type($overrideAdrr)
+      attr-dict  `:` type($tmaDescriptor) `,` type($srcMem) `,` type($overrideAddr)
     }];
 
     let hasVerifier = 1;
@@ -4905,9 +4905,9 @@ def NVVM_CpAsyncBulkTensorReduceOverrideAddrOp :
   NVVM_VoidIntrinsicOp<"cp.async.bulk.tensor.reduce.override",
                        [AttrSizedOperandSegments]> {
     let arguments = (ins
-      LLVM_AnyPointer:$tmaDesc,
+      LLVM_PointerGeneric:$tmaDescriptor,
       LLVM_PointerShared:$srcMem,
-      LLVM_PointerGlobal:$overrideAdrr,
+      LLVM_PointerGlobal:$overrideAddr,
       Variadic<I32>:$coordinates,
       Variadic<I16>:$tensorSize,
       Variadic<I32>:$lowerStride,
@@ -4929,23 +4929,7 @@ def NVVM_CpAsyncBulkTensorReduceOverrideAddrOp :
       The `mode` attribute selects the store mode and `redKind` selects the reduction
       operation (`ADD`, `MIN`, `MAX`, `INC`, `DEC`, `AND`, `OR`, `XOR`) that combines the
       source data in shared memory with the destination data in global memory. The override
-      variant is selected by which optional operands are provided:
-
-      - `override.addr` (`.override::global_address`): only `overrideAdrr` is given; the
-        global base address from the tensor-map is replaced. Supported in `TILE` (1D–5D),
-        `IM2COL` and `IM2COL_W` (3D–5D). `TILE_SCATTER4` is not supported.
-      - `override.addr.dim` (1D, `TILE` only): `overrideAdrr` plus `tensorSize` (one
-        element); also overrides the tensor global dimension.
-      - `override.addr.dim.stride` (2D–5D, `TILE` only): `overrideAdrr` plus `tensorSize`,
-        `lowerStride`, and `upperStride`; also overrides the global dimensions and strides.
-        The effective global stride is
-        `global_stride[i] = ((%stride{i} + (%upper_stride{i} << 32)) << 4)`.
-
-      `overrideAdrr` must be 16B aligned (a runtime error is raised otherwise) and the
-      memory range `[%override_addr, %override_addr + 128 KiB)` must be allocated and
-      accessible during execution. When overriding dimensions/strides, the base-address
-      override is mandatory and the tensor start coordinates must be zero; otherwise the
-      behavior is undefined.
+      variant is similar to the `cp.async.bulk.tensor.global.shared.cta.override` op described above.
 
       The optional `l2CacheHint` specifies a cache-eviction policy for the access.
 
@@ -4990,15 +4974,15 @@ def NVVM_CpAsyncBulkTensorReduceOverrideAddrOp :
     }];
 
     let assemblyFormat = [{
-      $tmaDesc `,`
+      $tmaDescriptor `,`
       $srcMem `,`
-      $overrideAdrr `,`
+      $overrideAddr `,`
       `box` `[`$coordinates `]`
       (`tensor_size` `[`$tensorSize^ `]`)?
       (`lower_stride` `[`$lowerStride^ `]`)?
       (`upper_stride` `[`$upperStride^ `]`)?
       (`l2_cache_hint` `=` $l2CacheHint^)?
-      attr-dict  `:` type($tmaDesc) `,` type($srcMem) `,` type($overrideAdrr)
+      attr-dict  `:` type($tmaDescriptor) `,` type($srcMem) `,` type($overrideAddr)
     }];
 
     let hasVerifier = 1;

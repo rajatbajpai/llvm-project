@@ -158,24 +158,28 @@ LogicalResult CpAsyncBulkTensorOverrideAddrCommonVerifier(
     OperandRange coordinates, OperandRange tensorSize, OperandRange lowerStride,
     Value upperStride, bool isTile, Location loc) {
   LogicalResult res = success();
-  if (!tensorSize.empty() && coordinates.size() != tensorSize.size())
+  if (!tensorSize.empty() && coordinates.size() != tensorSize.size()) {
     res =
         emitError(loc, "Expected coordinates size to be equal to tensor size");
+  }
 
-  if (!lowerStride.empty() && lowerStride.size() != tensorSize.size() - 1)
+  if (!lowerStride.empty() && lowerStride.size() != tensorSize.size() - 1) {
     res = emitError(
         loc,
         "Expected lower_stride size to be equal to one less than tensor size");
+  }
 
-  if (!lowerStride.empty() != static_cast<bool>(upperStride))
+  if (!lowerStride.empty() != static_cast<bool>(upperStride)) {
     res = emitError(loc,
                     "Expected lower_stride and upper_stride to be either both "
                     "present or both absent");
+  }
 
   bool isDimStride = tensorSize.size() > 0;
-  if (!isTile && isDimStride)
+  if (!isTile && isDimStride) {
     res = emitError(
         loc, "Only tile mode supports override address with dim and stride");
+  }
 
   return res;
 }
@@ -4803,8 +4807,8 @@ CpAsyncBulkTensorSharedCTAToGlobalOverrideAddrOp::getIntrinsicIDAndArgs(
 
   llvm::SmallVector<llvm::Value *> args;
   args.push_back(mt.lookupValue(thisOp.getSrcMem()));
-  args.push_back(mt.lookupValue(thisOp.getTmaDesc()));
-  args.push_back(mt.lookupValue(thisOp.getOverrideAdrr()));
+  args.push_back(mt.lookupValue(thisOp.getTmaDescriptor()));
+  args.push_back(mt.lookupValue(thisOp.getOverrideAddr()));
   for (Value v : thisOp.getTensorSize())
     args.push_back(mt.lookupValue(v));
   for (Value v : thisOp.getLowerStride())
@@ -4855,9 +4859,7 @@ CpAsyncBulkTensorSharedCTAToGlobalOverrideAddrOp::getIntrinsicIDAndArgs(
 
   assert(mode < std::size(IDTable) &&
          "Invalid mode for CpAsyncBulkTensorSharedCTAToGlobalOverrideAddrOp");
-  assert(dim < std::size(IDTable[mode]) &&
-         "Invalid dim for CpAsyncBulkTensorSharedCTAToGlobalOverrideAddrOp");
-  assert(dim < std::size(dimStrideIDTable) &&
+  assert(dim < std::size(IDTable[mode]) && dim < std::size(dimStrideIDTable) &&
          "Invalid dim for CpAsyncBulkTensorSharedCTAToGlobalOverrideAddrOp");
 
   ID intrinsicID = isDimStride ? dimStrideIDTable[dim] : IDTable[mode][dim];
@@ -4919,8 +4921,8 @@ NVVM::IDArgPair CpAsyncBulkTensorReduceOverrideAddrOp::getIntrinsicIDAndArgs(
 
   llvm::SmallVector<llvm::Value *> args;
   args.push_back(mt.lookupValue(thisOp.getSrcMem()));
-  args.push_back(mt.lookupValue(thisOp.getTmaDesc()));
-  args.push_back(mt.lookupValue(thisOp.getOverrideAdrr()));
+  args.push_back(mt.lookupValue(thisOp.getTmaDescriptor()));
+  args.push_back(mt.lookupValue(thisOp.getOverrideAddr()));
 
   for (Value v : thisOp.getTensorSize())
     args.push_back(mt.lookupValue(v));
@@ -4972,9 +4974,7 @@ static constexpr ID dimStrideIDTable[] = {
 
   assert(mode < std::size(IDTable) &&
          "Invalid mode for CpAsyncBulkTensorReduceOverrideAddrOp");
-  assert(dim < std::size(IDTable[mode]) &&
-         "Invalid dim for CpAsyncBulkTensorReduceOverrideAddrOp");
-  assert(dim < std::size(dimStrideIDTable) &&
+  assert(dim < std::size(IDTable[mode]) && dim < std::size(dimStrideIDTable) &&
          "Invalid dim for CpAsyncBulkTensorReduceOverrideAddrOp");
 
   ID intrinsicID = isDimStride ? dimStrideIDTable[dim] : IDTable[mode][dim];
